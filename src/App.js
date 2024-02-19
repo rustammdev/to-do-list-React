@@ -2,12 +2,28 @@ import { useState } from "react";
 import lightBtn from "./assets/Shape-1.svg";
 import darkBtn from "./assets/Shape.svg";
 import delBtn from "./assets/del.svg";
+import chekPoint from "./assets/checkpoint.svg";
 
 function App() {
   let [mode, setMode] = useState(true);
+  let [inputValue, setInputValue] = useState([{ text: "", isComplate: false }]);
 
   // dark mode and light mode
-  const mode
+  const Todemode = () => {
+    setMode((e) => {
+      return !e;
+    });
+  };
+
+  function pres(params) {
+    if (params.key === "Enter") {
+      console.log(params.target.value);
+      setInputValue((prev) => {
+        return (prev.text = params.target.value);
+      });
+      console.log(inputValue);
+    }
+  }
 
   return (
     <div
@@ -23,44 +39,49 @@ function App() {
             TODO
           </h1>
           <img
-            src={mode === "dark" ? lightBtn : darkBtn}
+            src={mode === false ? lightBtn : darkBtn}
             className="cursor-pointer"
+            onClick={() => {
+              Todemode();
+            }}
           />
         </div>
 
         <div className=" w-[100%] mt-[36px]">
           <input
             type="text"
-            className=" w-full px-[20px] py-[12px] rounded-md text-[12px]"
+            className={` w-full px-[20px] py-[12px] rounded-md text-[12px] ${
+              mode ?? false
+                ? "bg-white text-[#25273DFF]"
+                : "bg-[#25273DFF] text-white"
+            }`}
             placeholder="Create a new todo…"
+            onKeyPress={(e) => {
+              pres(e);
+            }}
           />
 
-          <ul className="bg-white mt-[16px] rounded-md">
+          <ul
+            className={` mt-[16px] rounded-md ${
+              mode ?? false ? "bg-white" : "bg-[#25273DFF]"
+            }`}
+          >
             <li className="flex px-[20px] py-[12px] gap-x-[12px]">
               <div className="flex justify-center items-center">
-                <p className="border w-[20px] h-[20px] rounded-full"></p>
+                {/* complate button */}
+                <p className={`border w-[20px] h-[20px] rounded-full`}></p>
               </div>
-              <div className="flex justify-between items-center w-full">
-                <p className="text-[12px] font-[400] text-[#494C6BFF] leading-3">
-                  Kitob o'qigandan so'ng uxlash.
-                </p>
-                <img
-                  src={delBtn}
-                  width="11.79"
-                  height="11.79"
-                  className="col-span-2"
-                />
-              </div>
-            </li>
 
-            <li className="flex px-[20px] py-[12px] gap-x-[12px]">
-              <div className="flex justify-center items-center">
-                <p className="border w-[20px] h-[20px] rounded-full"></p>
-              </div>
               <div className="flex justify-between items-center w-full">
-                <p className="text-[12px] font-[400] text-[#494C6BFF] leading-3">
+                <p
+                  className={`text-[12px] font-[400] ${
+                    mode ?? false ? "text-[#494C6BFF]" : "text-white"
+                  } leading-3`}
+                >
                   Kitob o'qigandan so'ng uxlash.
                 </p>
+
+                {/* del btn */}
                 <img
                   src={delBtn}
                   width="11.79"
