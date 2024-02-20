@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import lightBtn from "./assets/Shape-1.svg";
 import darkBtn from "./assets/Shape.svg";
 import delBtn from "./assets/del.svg";
@@ -6,7 +6,8 @@ import chekPoint from "./assets/checkpoint.svg";
 
 function App() {
   let [mode, setMode] = useState(true);
-  let [inputValue, setInputValue] = useState([{ text: "", isComplate: false }]);
+  let [inputValue, setInputValue] = useState("");
+  let [todos, setTodos] = useState([]);
 
   // dark mode and light mode
   const Todemode = () => {
@@ -15,15 +16,33 @@ function App() {
     });
   };
 
-  function pres(params) {
-    if (params.key === "Enter") {
-      console.log(params.target.value);
-      setInputValue((prev) => {
-        return (prev.text = params.target.value);
+  const handleSubmit = (e) => {
+    const newTodo = {
+      desc: e,
+      isDel: false,
+      id: todos.length > 0 ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1,
+      isActive: false,
+    };
+    // Yangi todo obyektini saqlash
+    setTodos([...todos, newTodo]);
+  };
+
+  const isAct = (id) => {
+    setTodos((prev) => {
+      return prev.map((e) => {
+        if (e.id === id) {
+          return { ...e, isActive: !e.isActive };
+        }
+        return { ...e, isActive: e.isActive };
       });
-      console.log(inputValue);
-    }
-  }
+    });
+  };
+
+  const handlerDel = (id) => {
+    setTodos((prev) => {
+      return prev.filter((e) => e.id !== id);
+    });
+  };
 
   return (
     <div
@@ -48,49 +67,106 @@ function App() {
         </div>
 
         <div className=" w-[100%] mt-[36px]">
-          <input
-            type="text"
-            className={` w-full px-[20px] py-[12px] rounded-md text-[12px] ${
-              mode ?? false
-                ? "bg-white text-[#25273DFF]"
-                : "bg-[#25273DFF] text-white"
-            }`}
-            placeholder="Create a new todo…"
-            onKeyPress={(e) => {
-              pres(e);
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(inputValue);
             }}
-          />
+          >
+            <input
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+              }}
+              type="text"
+              className={` w-full px-[20px] py-[12px] rounded-md text-[12px] ${
+                mode ?? false
+                  ? "bg-white text-[#25273DFF]"
+                  : "bg-[#25273DFF] text-white"
+              }`}
+              placeholder="Create a new todo…"
+            />
+          </form>
 
           <ul
             className={` mt-[16px] rounded-md ${
               mode ?? false ? "bg-white" : "bg-[#25273DFF]"
             }`}
           >
-            <li className="flex px-[20px] py-[12px] gap-x-[12px]">
-              <div className="flex justify-center items-center">
-                {/* complate button */}
-                <p className={`border w-[20px] h-[20px] rounded-full`}></p>
-              </div>
-
-              <div className="flex justify-between items-center w-full">
-                <p
-                  className={`text-[12px] font-[400] ${
-                    mode ?? false ? "text-[#494C6BFF]" : "text-white"
-                  } leading-3`}
+            {todos.map((item) => {
+              return (
+                <li
+                  className="flex px-[20px] py-[12px] gap-x-[12px]"
+                  key={item.id}
                 >
-                  Kitob o'qigandan so'ng uxlash.
-                </p>
+                  <div className="flex justify-center items-center">
+                    {/* complate button */}
+                    <p
+                      className={`border w-[20px] h-[20px] rounded-full ${
+                        item.isActive === true ? "bg-red-600" : ""
+                      }`}
+                      onClick={() => {
+                        isAct(item.id);
+                      }}
+                    ></p>
+                  </div>
 
-                {/* del btn */}
-                <img
-                  src={delBtn}
-                  width="11.79"
-                  height="11.79"
-                  className="col-span-2"
-                />
-              </div>
-            </li>
+                  <div className="flex justify-between items-center w-full">
+                    <p
+                      className={`text-[12px] font-[400] ${
+                        mode === true
+                          ? `text-[#494C6BFF]  ${
+                              item.isActive == true
+                                ? "line-through opacity-55"
+                                : ""
+                            }`
+                          : `text-white  ${
+                              item.isActive == true
+                                ? "line-through opacity-55"
+                                : ""
+                            }`
+                      } leading-3`}
+                    >
+                      {item.desc}
+                    </p>
+
+                    {/* del btn */}
+                    <img
+                      src={delBtn}
+                      width="11.79"
+                      height="11.79"
+                      className="col-span-2"
+                      onClick={() => {
+                        handlerDel(item.id);
+                      }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
           </ul>
+          <div
+            className={`flex justify-between items-center px-[20px] py-[12px] bg-white mt-[12px] text-[14px] 
+            ${todos.length <= 0 ? "hidden" : ""} `}
+          >
+            <span className="hover:text-[#2957b3] cursor-pointer hover:underline">
+              {todos.length} items
+            </span>
+            <ul className="flex justify-between items-center gap-4">
+              <li className="hover:text-[#2957b3] cursor-pointer hover:underline">
+                All
+              </li>
+              <li className="hover:text-[#2957b3] cursor-pointer hover:underline">
+                Active
+              </li>
+              <li className="hover:text-[#2957b3] cursor-pointer hover:underline">
+                Complate
+              </li>
+            </ul>
+            <span className="hover:text-[#2957b3] cursor-pointer hover:underline">
+              Clear Complated
+            </span>
+          </div>
         </div>
       </div>
     </div>
