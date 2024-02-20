@@ -19,14 +19,16 @@ function App() {
   const handleSubmit = (e) => {
     const newTodo = {
       desc: e,
-      isDel: false,
       id: todos.length > 0 ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1,
       isActive: false,
+      isDel: false,
+      isWiev: true,
     };
     // Yangi todo obyektini saqlash
-    setTodos([...todos, newTodo]);
+    setTodos([newTodo, ...todos]);
   };
 
+  // complate todo
   const isAct = (id) => {
     setTodos((prev) => {
       return prev.map((e) => {
@@ -38,9 +40,50 @@ function App() {
     });
   };
 
+  // del todo
   const handlerDel = (id) => {
     setTodos((prev) => {
       return prev.filter((e) => e.id !== id);
+    });
+  };
+
+  // filter All
+  const filterAll = () => {
+    setTodos((prev) => {
+      return prev.map((e) => {
+        return { ...e, isWiev: true };
+      });
+    });
+  };
+
+  // filter Active
+  const filterActive = () => {
+    setTodos((prev) => {
+      return prev.map((e) => {
+        if (e.isActive === true) {
+          return { ...e, isWiev: false };
+        }
+        return { ...e, isWiev: true };
+      });
+    });
+  };
+
+  // filter Complate
+  const filterComplate = () => {
+    setTodos((prev) => {
+      return prev.map((e) => {
+        if (e.isActive === true) {
+          return { ...e, isWiev: true };
+        }
+        return { ...e, isWiev: false };
+      });
+    });
+  };
+
+  // clear complateded
+  const clearComplated = () => {
+    setTodos((prev) => {
+      return prev.filter((e) => e.isActive === false);
     });
   };
 
@@ -70,6 +113,7 @@ function App() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              setInputValue("");
               handleSubmit(inputValue);
             }}
           >
@@ -89,26 +133,31 @@ function App() {
           </form>
 
           <ul
-            className={` mt-[16px] rounded-md ${
+            className={`divide-y divide-gray-200 mt-[16px] rounded-md ${
               mode ?? false ? "bg-white" : "bg-[#25273DFF]"
             }`}
           >
             {todos.map((item) => {
-              return (
+              return item.isWiev ? (
                 <li
-                  className="flex px-[20px] py-[12px] gap-x-[12px]"
+                  className="flex px-[20px] gap-x-[12px] h-[50px]"
                   key={item.id}
                 >
-                  <div className="flex justify-center items-center">
+                  <div
+                    className="flex justify-center items-center cursor-pointer"
+                    onClick={() => {
+                      isAct(item.id);
+                    }}
+                  >
                     {/* complate button */}
-                    <p
-                      className={`border w-[20px] h-[20px] rounded-full ${
-                        item.isActive === true ? "bg-red-600" : ""
-                      }`}
-                      onClick={() => {
-                        isAct(item.id);
-                      }}
-                    ></p>
+                    {!item.isActive && (
+                      <p
+                        className={`border w-[20px] h-[20px] rounded-full`}
+                      ></p>
+                    )}
+                    {item.isActive && (
+                      <img src={chekPoint} width="22" height="22" />
+                    )}
                   </div>
 
                   <div className="flex justify-between items-center w-full">
@@ -135,38 +184,63 @@ function App() {
                       src={delBtn}
                       width="11.79"
                       height="11.79"
-                      className="col-span-2"
+                      className="cursor-pointer"
                       onClick={() => {
                         handlerDel(item.id);
                       }}
                     />
                   </div>
                 </li>
+              ) : (
+                ""
               );
             })}
           </ul>
-          <div
-            className={`flex justify-between items-center px-[20px] py-[12px] bg-white mt-[12px] text-[14px] 
-            ${todos.length <= 0 ? "hidden" : ""} `}
+        </div>
+        <div
+          className={`flex justify-between items-center px-[20px] py-[12px] text-[14px]  fixed bottom-0 w-[90%] m-auto mb-4 ${
+            mode ?? false
+              ? "bg-white text-[#25273DFF]"
+              : "bg-[#25273DFF] text-white"
+          }`}
+        >
+          <span className="hover:text-[#2957b3] cursor-pointer hover:underline">
+            {todos.length} items
+          </span>
+          <ul className="flex justify-between items-center gap-4">
+            <li
+              className="text-[#2957b3] cursor-pointer hover:underline"
+              onClick={() => {
+                filterAll();
+              }}
+            >
+              All
+            </li>
+            <li
+              className="hover:text-[#2957b3] cursor-pointer hover:underline"
+              onClick={() => {
+                filterActive();
+              }}
+            >
+              Active
+            </li>
+            <li
+              className="hover:text-[#2957b3] cursor-pointer hover:underline"
+              onClick={() => {
+                filterComplate();
+              }}
+            >
+              Complate
+            </li>
+          </ul>
+          <span
+            className="hover:text-[#2957b3] cursor-pointer hover:underline"
+            onClick={() => {
+              clearComplated();
+            }}
           >
-            <span className="hover:text-[#2957b3] cursor-pointer hover:underline">
-              {todos.length} items
-            </span>
-            <ul className="flex justify-between items-center gap-4">
-              <li className="hover:text-[#2957b3] cursor-pointer hover:underline">
-                All
-              </li>
-              <li className="hover:text-[#2957b3] cursor-pointer hover:underline">
-                Active
-              </li>
-              <li className="hover:text-[#2957b3] cursor-pointer hover:underline">
-                Complate
-              </li>
-            </ul>
-            <span className="hover:text-[#2957b3] cursor-pointer hover:underline">
-              Clear Complated
-            </span>
-          </div>
+            Clear Complated
+          </span>
         </div>
       </div>
     </div>
