@@ -216,51 +216,53 @@ function App() {
         </div>
 
         {/* footer */}
-        <div
-          className={`flex justify-between items-center px-[20px] py-[12px] text-[14px] mt-3 max-mobile:flex-col max-mobile:gap-2 ${
-            mode ?? false
-              ? "bg-white text-[#25273DFF]"
-              : "bg-[#25273DFF] text-white"
-          }`}
-        >
-          <span>{countTrue(todos)} items</span>
+        {todos.length > 0 && (
+          <div
+            className={`flex justify-between items-center px-[20px] py-[12px] text-[14px] mt-3 max-mobile:flex-col max-mobile:gap-2 ${
+              mode ?? false
+                ? "bg-white text-[#25273DFF]"
+                : "bg-[#25273DFF] text-white"
+            }`}
+          >
+            <span>{countTrue(todos)} items</span>
 
-          <ul className="flex justify-between items-center gap-4">
-            <li
-              className="text-[#2957b3] cursor-pointer hover:underline"
+            <ul className="flex justify-between items-center gap-4">
+              <li
+                className="text-[#2957b3] cursor-pointer hover:underline"
+                onClick={() => {
+                  filterAll();
+                }}
+              >
+                All
+              </li>
+              <li
+                className="hover:text-[#2957b3] cursor-pointer hover:underline"
+                onClick={() => {
+                  filterActive();
+                }}
+              >
+                Active
+              </li>
+              <li
+                className="hover:text-[#2957b3] cursor-pointer hover:underline"
+                onClick={() => {
+                  filterComplate();
+                }}
+              >
+                Complate
+              </li>
+            </ul>
+            <span
+              className="hover:text-[#2957b3] cursor-pointer hover:underline"
               onClick={() => {
+                clearComplated();
                 filterAll();
               }}
             >
-              All
-            </li>
-            <li
-              className="hover:text-[#2957b3] cursor-pointer hover:underline"
-              onClick={() => {
-                filterActive();
-              }}
-            >
-              Active
-            </li>
-            <li
-              className="hover:text-[#2957b3] cursor-pointer hover:underline"
-              onClick={() => {
-                filterComplate();
-              }}
-            >
-              Complate
-            </li>
-          </ul>
-          <span
-            className="hover:text-[#2957b3] cursor-pointer hover:underline"
-            onClick={() => {
-              clearComplated();
-              filterAll();
-            }}
-          >
-            Clear Complated
-          </span>
-        </div>
+              Clear Complated
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
