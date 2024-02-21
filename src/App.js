@@ -23,15 +23,18 @@ function App() {
 
   // json
   const handleSubmit = (e) => {
-    const newTodo = {
-      desc: e,
-      id: todos.length > 0 ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1,
-      isActive: false,
-      isDel: false,
-      isWiev: true,
-    };
-    // Yangi todo obyektini saqlash
-    setTodos([newTodo, ...todos]);
+    if (e.trim().length > 0) {
+      const newTodo = {
+        desc: e,
+        id:
+          todos.length > 0 ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1,
+        isActive: false,
+        isDel: false,
+        isWiev: true,
+      };
+      // Yangi todo obyektini saqlash
+      setTodos([newTodo, ...todos]);
+    }
   };
 
   // complate todo
