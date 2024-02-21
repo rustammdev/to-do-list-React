@@ -88,125 +88,132 @@ function App() {
   };
 
   return (
+    // bacground color
     <div
       className={
-        mode === false ? "bg-[#171823] h-screen" : "bg-[#F4F4F6FF] h-screen"
+        mode === false ? "bg-[#171823] h-screen" : "bg-[#d5d5d9] h-screen"
       }
     >
+      {/* background img */}
       <div className=" h-[200px] bg-cover bg-center mobile:h-[300px] bg-[url('./assets/light-bg-mobile.jpg')] mobile:bg-[url('./assets/light-bg.jpg')]"></div>
 
-      <div className="absolute top-[48px] pl-[26px] pr-[26px] w-[100%]">
-        <div className="flex justify-between">
-          <h1 className=" text-white text-[22px] font-bold tracking-[8px]">
-            TODO
-          </h1>
-          <img
-            src={mode === false ? lightBtn : darkBtn}
-            className="cursor-pointer"
-            onClick={() => {
-              Todemode();
-            }}
-          />
-        </div>
-
-        <div className=" w-[100%] mt-[36px]">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setInputValue("");
-              handleSubmit(inputValue);
-            }}
-          >
-            <input
-              value={inputValue}
-              onChange={(e) => {
-                setInputValue(e.target.value);
+      <div className="relative mobile:top-[-200px] top-[-120px] max-w-xl pl-[26px] pr-[26px] m-auto">
+        {/* main */}
+        <div>
+          {/* title and mode */}
+          <div className="flex justify-between">
+            <h1 className=" text-white text-[22px] font-bold tracking-[8px]">
+              TODO
+            </h1>
+            <img
+              src={mode === false ? lightBtn : darkBtn}
+              className="cursor-pointer"
+              onClick={() => {
+                Todemode();
               }}
-              type="text"
-              className={` w-full px-[20px] py-[12px] rounded-md text-[12px] ${
-                mode ?? false
-                  ? "bg-white text-[#25273DFF]"
-                  : "bg-[#25273DFF] text-white"
-              }`}
-              placeholder="Create a new todo…"
             />
-          </form>
+          </div>
 
-          <ul
-            className={`divide-y divide-gray-200 mt-[16px] rounded-md ${
-              mode ?? false ? "bg-white" : "bg-[#25273DFF]"
-            }`}
-          >
-            {todos.map((item) => {
-              return item.isWiev ? (
-                <li
-                  className="flex px-[20px] gap-x-[12px] h-[50px]"
-                  key={item.id}
-                >
-                  <div
-                    className="flex justify-center items-center cursor-pointer"
-                    onClick={() => {
-                      isAct(item.id);
-                    }}
+          {/* todo items */}
+          <div className=" w-[100%] mt-[36px]">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setInputValue("");
+                handleSubmit(inputValue);
+              }}
+            >
+              <input
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                }}
+                type="text"
+                className={` w-full px-[20px] py-[12px] rounded-md text-[12px] ${
+                  mode ?? false
+                    ? "bg-white text-[#25273DFF]"
+                    : "bg-[#25273DFF] text-white"
+                }`}
+                placeholder="Create a new todo…"
+              />
+            </form>
+
+            <ul
+              className={` mt-[16px] rounded-md ${
+                mode ?? false ? "bg-white" : "bg-[#25273DFF]"
+              }`}
+            >
+              {todos.map((item) => {
+                return item.isWiev ? (
+                  <li
+                    className="flex px-[20px] gap-x-[12px] h-[50px]"
+                    key={item.id}
                   >
-                    {/* complate button */}
-                    {!item.isActive && (
-                      <p
-                        className={`border w-[20px] h-[20px] rounded-full`}
-                      ></p>
-                    )}
-                    {item.isActive && (
-                      <img src={chekPoint} width="22" height="22" />
-                    )}
-                  </div>
-
-                  <div className="flex justify-between items-center w-full">
-                    <p
-                      className={`text-[12px] font-[400] ${
-                        mode === true
-                          ? `text-[#494C6BFF]  ${
-                              item.isActive == true
-                                ? "line-through opacity-55"
-                                : ""
-                            }`
-                          : `text-white  ${
-                              item.isActive == true
-                                ? "line-through opacity-55"
-                                : ""
-                            }`
-                      } leading-3`}
-                    >
-                      {item.desc}
-                    </p>
-
-                    {/* del btn */}
-                    <img
-                      src={delBtn}
-                      width="11.79"
-                      height="11.79"
-                      className="cursor-pointer"
+                    <div
+                      className="flex justify-center items-center cursor-pointer"
                       onClick={() => {
-                        handlerDel(item.id);
+                        isAct(item.id);
                       }}
-                    />
-                  </div>
-                </li>
-              ) : (
-                ""
-              );
-            })}
-          </ul>
+                    >
+                      {/* complate button */}
+                      {!item.isActive && (
+                        <p
+                          className={`border w-[20px] h-[20px] rounded-full`}
+                        ></p>
+                      )}
+                      {item.isActive && (
+                        <img src={chekPoint} width="22" height="22" />
+                      )}
+                    </div>
+
+                    <div className="flex justify-between items-center w-full">
+                      <p
+                        className={`text-[12px] font-[400] ${
+                          mode === true
+                            ? `text-[#494C6BFF]  ${
+                                item.isActive == true
+                                  ? "line-through opacity-55"
+                                  : ""
+                              }`
+                            : `text-white  ${
+                                item.isActive == true
+                                  ? "line-through opacity-55"
+                                  : ""
+                              }`
+                        } leading-3`}
+                      >
+                        {item.desc}
+                      </p>
+
+                      {/* del btn */}
+                      <img
+                        src={delBtn}
+                        width="11.79"
+                        height="11.79"
+                        className="cursor-pointer"
+                        onClick={() => {
+                          handlerDel(item.id);
+                        }}
+                      />
+                    </div>
+                  </li>
+                ) : (
+                  ""
+                );
+              })}
+            </ul>
+          </div>
         </div>
+
+        {/* footer */}
         <div
-          className={`flex justify-between items-center px-[20px] py-[12px] text-[14px]  fixed bottom-0 w-[90%] m-auto mb-4 ${
+          className={`flex justify-between items-center px-[20px] py-[12px] text-[14px] mt-3 max-mobile:flex-col max-mobile:gap-2 ${
             mode ?? false
               ? "bg-white text-[#25273DFF]"
               : "bg-[#25273DFF] text-white"
           }`}
         >
-          <span className="hover:text-[#2957b3] cursor-pointer hover:underline">
-            {todos.length} items
-          </span>
+          <span>{todos.length} items</span>
           <ul className="flex justify-between items-center gap-4">
             <li
               className="text-[#2957b3] cursor-pointer hover:underline"
@@ -237,6 +244,7 @@ function App() {
             className="hover:text-[#2957b3] cursor-pointer hover:underline"
             onClick={() => {
               clearComplated();
+              filterAll();
             }}
           >
             Clear Complated
