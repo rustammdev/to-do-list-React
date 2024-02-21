@@ -16,6 +16,12 @@ function App() {
     });
   };
 
+  function countTrue(array) {
+    const trueIsWiev = array.filter((item) => item.isWiev === true);
+    return trueIsWiev.length;
+  }
+
+  // json
   const handleSubmit = (e) => {
     const newTodo = {
       desc: e,
@@ -121,6 +127,7 @@ function App() {
                 e.preventDefault();
                 setInputValue("");
                 handleSubmit(inputValue);
+                filterAll();
               }}
             >
               <input
@@ -213,7 +220,8 @@ function App() {
               : "bg-[#25273DFF] text-white"
           }`}
         >
-          <span>{todos.length} items</span>
+          <span>{countTrue(todos)} items</span>
+
           <ul className="flex justify-between items-center gap-4">
             <li
               className="text-[#2957b3] cursor-pointer hover:underline"
